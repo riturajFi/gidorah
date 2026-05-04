@@ -19,6 +19,16 @@ class ParametricVaRResult:
     var_dollar: float
 
 
+@dataclass(frozen=True)
+class MonteCarloVaRResult:
+    var_95_return: float
+    var_95_dollar: float
+    var_99_return: float
+    var_99_dollar: float
+    num_simulations: int
+    seed: int
+
+
 class HistoricalVaRService:
     def calculate_var(
         self,
@@ -46,6 +56,21 @@ class ParametricVaRService:
         confidence_level: float,
     ) -> ParametricVaRResult:
         cov_matrix = returns.cov()
+        return self.calculate_var_from_covariance(
+            cov_matrix,
+            weights,
+            portfolio_value,
+            confidence_level,
+        )
+
+    def calculate_var_from_covariance(
+        self,
+        cov_matrix: pd.DataFrame,
+        weights,
+        portfolio_value: float,
+        confidence_level: float,
+    ) -> ParametricVaRResult:
+        weights = np.asarray(weights)
         portfolio_variance = weights.T @ cov_matrix @ weights
         portfolio_volatility = np.sqrt(portfolio_variance)
         z_score = norm.ppf(confidence_level)
@@ -55,4 +80,40 @@ class ParametricVaRService:
             confidence_level=confidence_level,
             portfolio_volatility=portfolio_volatility,
             var_dollar=var_dollar,
+        )
+
+
+class MonteCarloVaRService:
+    def calculate_var(
+        self,
+        returns: pd.DataFrame,
+        weights,
+        portfolio_value: float = 1_000_000,
+        num_simulations: int = 10_000,
+        seed: int = 42,
+    ) -> MonteCarloVaRResult:
+        np.random.seed(seed)
+
+        mean_returns = returns.mean()
+        cov_matrix = returns.cov()
+
+        simulated_stock_returns = np.random.multivariate_normal(
+            mean=mean_returns,
+            cov=cov_matrix,
+            size=num_simulations,
+        )
+        simulated_portfolio_returns = simulated_stock_returns @ weights
+
+        var_95_return = np.quantile(simulated_portfolio_returns, 0.05)
+        var_99_return = np.quantile(simulated_portfolio_returns, 0.01)
+        var_95_dollar = -var_95_return * portfolio_value
+        var_99_dollar = -var_99_return * portfolio_value
+
+        return MonteCarloVaRResult(
+            var_95_return=var_95_return,
+            var_95_dollar=var_95_dollar,
+            var_99_return=var_99_return,
+            var_99_dollar=var_99_dollar,
+            num_simulations=num_simulations,
+            seed=seed,
         )

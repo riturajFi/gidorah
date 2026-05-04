@@ -13,9 +13,11 @@ Start here before reading implementation files.
 ## Repo Map
 
 - `main.py`: top-level workflow. No business logic should live here.
+- `README.md`: quick run and project overview for humans.
 - `services/data_fetch/`: market data fetch, validation, price CSV read/write.
 - `services/returns/`: daily stock returns and daily portfolio returns.
-- `services/var/`: Historical Simulation VaR and Parametric VaR.
+- `services/var/`: Historical Simulation VaR, Parametric VaR, Monte Carlo VaR.
+- `services/scenarios/`: stress scenarios, starting with correlation spike.
 - `requirements.txt`: Python dependencies.
 - generated CSV files: `prices.csv`, `returns.csv`, `portfolio_returns.csv`.
 
@@ -24,6 +26,7 @@ Start here before reading implementation files.
 - For price fetching, read `services/data_fetch/instructions.md`.
 - For return calculation, read `services/returns/instructions.md`.
 - For VaR calculation, read `services/var/instructions.md`.
+- For stress scenarios, read `services/scenarios/instructions.md`.
 
 ## Design Style
 
@@ -32,7 +35,7 @@ Start here before reading implementation files.
 - Export public classes from folder `__init__.py`.
 - Keep `main.py` outside service folders.
 - Let `main.py` coordinate services only.
-- Prefer explicit service class names: `PriceDataFetchService`, `ReturnCalculatorService`, `HistoricalVaRService`.
+- Prefer explicit service class names: `PriceDataFetchService`, `ReturnCalculatorService`, `HistoricalVaRService`, `ParametricVaRService`, `MonteCarloVaRService`.
 - Prefer immutable dataclasses for request/result objects.
 - Keep formulas visible and close to domain names.
 - Use pandas/numpy built-ins for financial calculations.
@@ -61,6 +64,8 @@ Start here before reading implementation files.
 6. `ReturnCalculatorService.save_portfolio_returns(...)`
 7. `HistoricalVaRService.calculate_var(...)`
 8. `ParametricVaRService.calculate_var(...)`
+9. `MonteCarloVaRService.calculate_var(...)`
+10. `CorrelationSpikeScenarioService.run(...)`
 
 ## Data Contracts
 
@@ -69,3 +74,5 @@ Start here before reading implementation files.
 - Portfolio returns: `pd.Series`, date index, name `portfolio_return`.
 - VaR result: `HistoricalVaRResult`, fields `confidence_level`, `var_return`, `var_dollar`.
 - Parametric VaR result: `ParametricVaRResult`, fields `confidence_level`, `portfolio_volatility`, `var_dollar`.
+- Monte Carlo VaR result: `MonteCarloVaRResult`, fields `var_95_return`, `var_95_dollar`, `var_99_return`, `var_99_dollar`, `num_simulations`, `seed`.
+- Correlation spike result: `CorrelationSpikeScenarioResult`, fields `correlation`, `var_95`, `var_99`.

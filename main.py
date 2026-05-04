@@ -2,7 +2,12 @@ import numpy as np
 
 from services.data_fetch import PriceDataFetchService, PriceDataRequest
 from services.returns import ReturnCalculatorService
-from services.var import HistoricalVaRService, ParametricVaRService
+from services.scenarios import CorrelationSpikeScenarioService
+from services.var import (
+    HistoricalVaRService,
+    MonteCarloVaRService,
+    ParametricVaRService,
+)
 
 
 PORTFOLIO_VALUE = 1_000_000
@@ -18,6 +23,8 @@ def main():
     return_calculator = ReturnCalculatorService()
     historical_var_service = HistoricalVaRService()
     parametric_var_service = ParametricVaRService()
+    monte_carlo_var_service = MonteCarloVaRService()
+    correlation_spike_service = CorrelationSpikeScenarioService(parametric_var_service)
 
     prices = service.fetch_prices(request)
     service.save_prices(prices, "prices.csv")
@@ -53,6 +60,19 @@ def main():
         PORTFOLIO_VALUE,
         confidence_level=0.99,
     )
+    monte_carlo_var = monte_carlo_var_service.calculate_var(
+        returns,
+        weights,
+        portfolio_value=PORTFOLIO_VALUE,
+        num_simulations=10_000,
+        seed=42,
+    )
+    correlation_spike = correlation_spike_service.run(
+        returns,
+        weights,
+        PORTFOLIO_VALUE,
+        correlation=0.85,
+    )
 
     print("Fetched price data successfully.")
     print()
@@ -85,6 +105,23 @@ def main():
     )
     print(f"95% VaR: ${parametric_var_95.var_dollar:,.2f}")
     print(f"99% VaR: ${parametric_var_99.var_dollar:,.2f}")
+    print()
+    print("Monte Carlo VaR")
+    print(f"Simulations: {monte_carlo_var.num_simulations}")
+    print(f"Seed: {monte_carlo_var.seed}")
+    print(f"95% VaR return: {monte_carlo_var.var_95_return:.4%}")
+    print(f"95% VaR dollar: ${monte_carlo_var.var_95_dollar:,.2f}")
+    print(f"99% VaR return: {monte_carlo_var.var_99_return:.4%}")
+    print(f"99% VaR dollar: ${monte_carlo_var.var_99_dollar:,.2f}")
+    print()
+    print("Correlation Spike Scenario")
+    print(f"Forced correlation: {correlation_spike.correlation:.2f}")
+    print(
+        "Portfolio daily volatility: "
+        f"{correlation_spike.var_95.portfolio_volatility:.4%}"
+    )
+    print(f"95% VaR: ${correlation_spike.var_95.var_dollar:,.2f}")
+    print(f"99% VaR: ${correlation_spike.var_99.var_dollar:,.2f}")
 
 
 if __name__ == "__main__":

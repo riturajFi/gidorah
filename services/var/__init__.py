@@ -1,6 +1,8 @@
 from services.var.service import (
     HistoricalVaRResult,
     HistoricalVaRService,
+    MonteCarloVaRResult,
+    MonteCarloVaRService,
     ParametricVaRResult,
     ParametricVaRService,
 )
@@ -9,6 +11,8 @@ from services.var.service import (
 __all__ = [
     "HistoricalVaRResult",
     "HistoricalVaRService",
+    "MonteCarloVaRResult",
+    "MonteCarloVaRService",
     "ParametricVaRResult",
     "ParametricVaRService",
 ]
