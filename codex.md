@@ -75,4 +75,4 @@ Start here before reading implementation files.
 - VaR result: `HistoricalVaRResult`, fields `confidence_level`, `var_return`, `var_dollar`.
 - Parametric VaR result: `ParametricVaRResult`, fields `confidence_level`, `portfolio_volatility`, `var_dollar`.
 - Monte Carlo VaR result: `MonteCarloVaRResult`, fields `var_95_return`, `var_95_dollar`, `var_99_return`, `var_99_dollar`, `num_simulations`, `seed`.
-- Correlation spike result: `CorrelationSpikeScenarioResult`, fields `correlation`, `var_95`, `var_99`.
+- Correlation spike result: `CorrelationSpikeScenarioResult`, fields `stressed_corr`, `portfolio_vol`, `var_95_dollar`, `var_99_dollar`.

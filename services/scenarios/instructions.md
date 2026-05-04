@@ -12,7 +12,7 @@ Run stress scenarios against existing return data.
 ## Public API
 
 - `CorrelationSpikeScenarioService.run(returns, weights, portfolio_value, correlation=0.85)`
-- `CorrelationSpikeScenarioResult`: immutable result with `correlation`, `var_95`, `var_99`
+- `CorrelationSpikeScenarioResult`: immutable result with `stressed_corr`, `portfolio_vol`, `var_95_dollar`, `var_99_dollar`
 
 ## Correlation Spike Rules
 

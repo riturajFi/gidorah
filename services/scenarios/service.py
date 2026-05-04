@@ -3,14 +3,15 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
-from services.var import ParametricVaRResult, ParametricVaRService
+from services.var import ParametricVaRService
 
 
 @dataclass(frozen=True)
 class CorrelationSpikeScenarioResult:
-    correlation: float
-    var_95: ParametricVaRResult
-    var_99: ParametricVaRResult
+    stressed_corr: float
+    portfolio_vol: float
+    var_95_dollar: float
+    var_99_dollar: float
 
 
 class CorrelationSpikeScenarioService:
@@ -25,21 +26,24 @@ class CorrelationSpikeScenarioService:
         correlation: float = 0.85,
     ) -> CorrelationSpikeScenarioResult:
         spiked_cov_matrix = self._build_spiked_covariance(returns, correlation)
+        var_95 = self.parametric_var_service.calculate_var_from_covariance(
+            spiked_cov_matrix,
+            weights,
+            portfolio_value,
+            confidence_level=0.95,
+        )
+        var_99 = self.parametric_var_service.calculate_var_from_covariance(
+            spiked_cov_matrix,
+            weights,
+            portfolio_value,
+            confidence_level=0.99,
+        )
 
         return CorrelationSpikeScenarioResult(
-            correlation=correlation,
-            var_95=self.parametric_var_service.calculate_var_from_covariance(
-                spiked_cov_matrix,
-                weights,
-                portfolio_value,
-                confidence_level=0.95,
-            ),
-            var_99=self.parametric_var_service.calculate_var_from_covariance(
-                spiked_cov_matrix,
-                weights,
-                portfolio_value,
-                confidence_level=0.99,
-            ),
+            stressed_corr=correlation,
+            portfolio_vol=var_95.portfolio_volatility,
+            var_95_dollar=var_95.var_dollar,
+            var_99_dollar=var_99.var_dollar,
         )
 
     def _build_spiked_covariance(

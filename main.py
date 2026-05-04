@@ -115,13 +115,10 @@ def main():
     print(f"99% VaR dollar: ${monte_carlo_var.var_99_dollar:,.2f}")
     print()
     print("Correlation Spike Scenario")
-    print(f"Forced correlation: {correlation_spike.correlation:.2f}")
-    print(
-        "Portfolio daily volatility: "
-        f"{correlation_spike.var_95.portfolio_volatility:.4%}"
-    )
-    print(f"95% VaR: ${correlation_spike.var_95.var_dollar:,.2f}")
-    print(f"99% VaR: ${correlation_spike.var_99.var_dollar:,.2f}")
+    print(f"Stressed correlation: {correlation_spike.stressed_corr:.2f}")
+    print(f"Stressed daily volatility: {correlation_spike.portfolio_vol:.4%}")
+    print(f"95% stressed VaR: ${correlation_spike.var_95_dollar:,.2f}")
+    print(f"99% stressed VaR: ${correlation_spike.var_99_dollar:,.2f}")
 
 
 if __name__ == "__main__":
