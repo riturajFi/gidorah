@@ -81,31 +81,3 @@ class PriceDataFetchService:
         prices = raw[["Close"]].copy()
         prices.columns = list(tickers)
         return prices
-
-
-def fetch_price_data(
-    tickers=None,
-    start_date="2020-01-01",
-    end_date=None,
-) -> pd.DataFrame:
-    request = PriceDataRequest(
-        tickers=DEFAULT_TICKERS if tickers is None else tickers,
-        start_date=start_date,
-        end_date=end_date,
-    )
-    return PriceDataFetchService().fetch_prices(request)
-
-
-def validate_price_data(prices: pd.DataFrame, tickers=None) -> None:
-    PriceDataFetchService().validate_prices(
-        prices,
-        DEFAULT_TICKERS if tickers is None else tickers,
-    )
-
-
-def save_prices(prices: pd.DataFrame, path="prices.csv") -> None:
-    PriceDataFetchService().save_prices(prices, path)
-
-
-def load_prices(path="prices.csv") -> pd.DataFrame:
-    return PriceDataFetchService().load_prices(path)

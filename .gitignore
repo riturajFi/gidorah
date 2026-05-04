@@ -12,5 +12,6 @@ __pycache__/
 
 prices.csv
 returns.csv
+portfolio_returns.csv
 
 .DS_Store
