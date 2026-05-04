@@ -18,7 +18,7 @@ python -m venv .venv
 4. Calculate Historical VaR.
 5. Calculate Parametric VaR.
 6. Calculate Monte Carlo VaR.
-7. Run correlation spike stress scenario.
+7. Run stress scenarios.
 
 ## Structure
 
@@ -26,7 +26,7 @@ python -m venv .venv
 - `services/data_fetch/`: price data service.
 - `services/returns/`: daily return and portfolio return service.
 - `services/var/`: Historical, Parametric, and Monte Carlo VaR services.
-- `services/scenarios/`: stress scenario services.
+- `services/scenarios/`: scenario interface and stress scenario implementations.
 - `codex.md`: design and navigation instructions for future agents.
 
 Generated CSV files are ignored by git:

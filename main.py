@@ -2,7 +2,12 @@ import numpy as np
 
 from services.data_fetch import PriceDataFetchService, PriceDataRequest
 from services.returns import ReturnCalculatorService
-from services.scenarios import CorrelationSpikeScenarioService
+from services.scenarios import (
+    CorrelationSpikeScenario,
+    EquityShock2008Scenario,
+    ScenarioInput,
+    TechDrawdownScenario,
+)
 from services.var import (
     HistoricalVaRService,
     MonteCarloVaRService,
@@ -24,7 +29,11 @@ def main():
     historical_var_service = HistoricalVaRService()
     parametric_var_service = ParametricVaRService()
     monte_carlo_var_service = MonteCarloVaRService()
-    correlation_spike_service = CorrelationSpikeScenarioService(parametric_var_service)
+    scenarios = [
+        EquityShock2008Scenario(),
+        TechDrawdownScenario(),
+        CorrelationSpikeScenario(parametric_var_service),
+    ]
 
     prices = service.fetch_prices(request)
     service.save_prices(prices, "prices.csv")
@@ -67,12 +76,12 @@ def main():
         num_simulations=10_000,
         seed=42,
     )
-    correlation_spike = correlation_spike_service.run(
-        returns,
-        weights,
-        PORTFOLIO_VALUE,
-        correlation=0.85,
+    scenario_input = ScenarioInput(
+        returns=returns,
+        weights=weights,
+        portfolio_value=PORTFOLIO_VALUE,
     )
+    scenario_results = [scenario.run(scenario_input) for scenario in scenarios]
 
     print("Fetched price data successfully.")
     print()
@@ -113,12 +122,34 @@ def main():
     print(f"95% VaR dollar: ${monte_carlo_var.var_95_dollar:,.2f}")
     print(f"99% VaR return: {monte_carlo_var.var_99_return:.4%}")
     print(f"99% VaR dollar: ${monte_carlo_var.var_99_dollar:,.2f}")
+    print_scenario_results(scenario_results)
+
+
+def print_scenario_results(scenario_results):
     print()
-    print("Correlation Spike Scenario")
-    print(f"Stressed correlation: {correlation_spike.stressed_corr:.2f}")
-    print(f"Stressed daily volatility: {correlation_spike.portfolio_vol:.4%}")
-    print(f"95% stressed VaR: ${correlation_spike.var_95_dollar:,.2f}")
-    print(f"99% stressed VaR: ${correlation_spike.var_99_dollar:,.2f}")
+    print("Stress Scenarios")
+    for result in scenario_results:
+        print()
+        print(result.name)
+        for metric_name, metric_value in result.metrics.items():
+            print(
+                f"{format_metric_name(metric_name)}: "
+                f"{format_metric_value(metric_name, metric_value)}"
+            )
+
+
+def format_metric_name(metric_name: str) -> str:
+    return metric_name.replace("_", " ").title()
+
+
+def format_metric_value(metric_name: str, metric_value: float) -> str:
+    if metric_name.endswith("_dollar"):
+        return f"${metric_value:,.2f}"
+
+    if metric_name in {"portfolio_return", "portfolio_vol"}:
+        return f"{metric_value:.4%}"
+
+    return f"{metric_value:.2f}"
 
 
 if __name__ == "__main__":

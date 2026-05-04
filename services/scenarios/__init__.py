@@ -1,10 +1,20 @@
 from services.scenarios.service import (
-    CorrelationSpikeScenarioResult,
-    CorrelationSpikeScenarioService,
+    CorrelationSpikeScenario,
+    EquityShock2008Scenario,
+    Scenario,
+    ScenarioInput,
+    ScenarioResult,
+    TechDrawdownScenario,
+    WeightedShockScenario,
 )
 
 
 __all__ = [
-    "CorrelationSpikeScenarioResult",
-    "CorrelationSpikeScenarioService",
+    "CorrelationSpikeScenario",
+    "EquityShock2008Scenario",
+    "Scenario",
+    "ScenarioInput",
+    "ScenarioResult",
+    "TechDrawdownScenario",
+    "WeightedShockScenario",
 ]

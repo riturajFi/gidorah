@@ -17,7 +17,7 @@ Start here before reading implementation files.
 - `services/data_fetch/`: market data fetch, validation, price CSV read/write.
 - `services/returns/`: daily stock returns and daily portfolio returns.
 - `services/var/`: Historical Simulation VaR, Parametric VaR, Monte Carlo VaR.
-- `services/scenarios/`: stress scenarios, starting with correlation spike.
+- `services/scenarios/`: scenario interface and stress scenario implementations.
 - `requirements.txt`: Python dependencies.
 - generated CSV files: `prices.csv`, `returns.csv`, `portfolio_returns.csv`.
 
@@ -75,4 +75,6 @@ Start here before reading implementation files.
 - VaR result: `HistoricalVaRResult`, fields `confidence_level`, `var_return`, `var_dollar`.
 - Parametric VaR result: `ParametricVaRResult`, fields `confidence_level`, `portfolio_volatility`, `var_dollar`.
 - Monte Carlo VaR result: `MonteCarloVaRResult`, fields `var_95_return`, `var_95_dollar`, `var_99_return`, `var_99_dollar`, `num_simulations`, `seed`.
-- Correlation spike result: `CorrelationSpikeScenarioResult`, fields `stressed_corr`, `portfolio_vol`, `var_95_dollar`, `var_99_dollar`.
+- Scenario input: `ScenarioInput`, fields `returns`, `weights`, `portfolio_value`.
+- Scenario result: `ScenarioResult`, fields `name`, `metrics`.
+- Scenario contract: every scenario inherits `Scenario` and implements `run(scenario_input)`.
