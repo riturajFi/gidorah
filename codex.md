@@ -15,7 +15,7 @@ Start here before reading implementation files.
 - `main.py`: top-level workflow. No business logic should live here.
 - `services/data_fetch/`: market data fetch, validation, price CSV read/write.
 - `services/returns/`: daily stock returns and daily portfolio returns.
-- `services/var/`: Historical Simulation VaR.
+- `services/var/`: Historical Simulation VaR and Parametric VaR.
 - `requirements.txt`: Python dependencies.
 - generated CSV files: `prices.csv`, `returns.csv`, `portfolio_returns.csv`.
 
@@ -60,6 +60,7 @@ Start here before reading implementation files.
 5. `ReturnCalculatorService.calculate_portfolio_returns(...)`
 6. `ReturnCalculatorService.save_portfolio_returns(...)`
 7. `HistoricalVaRService.calculate_var(...)`
+8. `ParametricVaRService.calculate_var(...)`
 
 ## Data Contracts
 
@@ -67,3 +68,4 @@ Start here before reading implementation files.
 - Stock returns: `pd.DataFrame`, date index, ticker columns, daily percentage returns as decimals.
 - Portfolio returns: `pd.Series`, date index, name `portfolio_return`.
 - VaR result: `HistoricalVaRResult`, fields `confidence_level`, `var_return`, `var_dollar`.
+- Parametric VaR result: `ParametricVaRResult`, fields `confidence_level`, `portfolio_volatility`, `var_dollar`.

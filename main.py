@@ -2,7 +2,7 @@ import numpy as np
 
 from services.data_fetch import PriceDataFetchService, PriceDataRequest
 from services.returns import ReturnCalculatorService
-from services.var import HistoricalVaRService
+from services.var import HistoricalVaRService, ParametricVaRService
 
 
 PORTFOLIO_VALUE = 1_000_000
@@ -16,7 +16,8 @@ def main():
     )
     service = PriceDataFetchService()
     return_calculator = ReturnCalculatorService()
-    var_service = HistoricalVaRService()
+    historical_var_service = HistoricalVaRService()
+    parametric_var_service = ParametricVaRService()
 
     prices = service.fetch_prices(request)
     service.save_prices(prices, "prices.csv")
@@ -30,13 +31,25 @@ def main():
         portfolio_returns,
         "portfolio_returns.csv",
     )
-    var_95 = var_service.calculate_var(
+    historical_var_95 = historical_var_service.calculate_var(
         portfolio_returns,
         PORTFOLIO_VALUE,
         confidence_level=0.95,
     )
-    var_99 = var_service.calculate_var(
+    historical_var_99 = historical_var_service.calculate_var(
         portfolio_returns,
+        PORTFOLIO_VALUE,
+        confidence_level=0.99,
+    )
+    parametric_var_95 = parametric_var_service.calculate_var(
+        returns,
+        weights,
+        PORTFOLIO_VALUE,
+        confidence_level=0.95,
+    )
+    parametric_var_99 = parametric_var_service.calculate_var(
+        returns,
+        weights,
         PORTFOLIO_VALUE,
         confidence_level=0.99,
     )
@@ -60,10 +73,18 @@ def main():
     print(portfolio_returns.tail())
     print()
     print("Historical VaR")
-    print(f"95% VaR return: {var_95.var_return:.4%}")
-    print(f"95% VaR dollar: ${var_95.var_dollar:,.2f}")
-    print(f"99% VaR return: {var_99.var_return:.4%}")
-    print(f"99% VaR dollar: ${var_99.var_dollar:,.2f}")
+    print(f"95% VaR return: {historical_var_95.var_return:.4%}")
+    print(f"95% VaR dollar: ${historical_var_95.var_dollar:,.2f}")
+    print(f"99% VaR return: {historical_var_99.var_return:.4%}")
+    print(f"99% VaR dollar: ${historical_var_99.var_dollar:,.2f}")
+    print()
+    print("Parametric VaR")
+    print(
+        "Portfolio daily volatility: "
+        f"{parametric_var_95.portfolio_volatility:.4%}"
+    )
+    print(f"95% VaR: ${parametric_var_95.var_dollar:,.2f}")
+    print(f"99% VaR: ${parametric_var_99.var_dollar:,.2f}")
 
 
 if __name__ == "__main__":
