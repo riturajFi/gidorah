@@ -2,11 +2,26 @@
 
 Lean Python project for portfolio risk using daily stock prices.
 
-## Run
+## Notebook-First Run
 
 ```bash
 python -m venv .venv
 .venv/bin/pip install -r requirements.txt
+```
+
+Open and run:
+
+```text
+portfolio_var_analysis.ipynb
+```
+
+Use **Run All** to execute the full workflow cell by cell with tables and charts.
+
+## CLI Check
+
+`main.py` mirrors the notebook pipeline for quick verification:
+
+```bash
 .venv/bin/python main.py
 ```
 
@@ -19,10 +34,12 @@ python -m venv .venv
 5. Calculate Parametric VaR.
 6. Calculate Monte Carlo VaR.
 7. Run stress scenarios.
+8. Explore outputs in notebook tables and charts.
 
 ## Structure
 
-- `main.py`: orchestrates workflow.
+- `portfolio_var_analysis.ipynb`: primary exploratory workflow with tables and charts.
+- `main.py`: CLI mirror of the notebook pipeline.
 - `services/data_fetch/`: price data service.
 - `services/returns/`: daily return and portfolio return service.
 - `services/var/`: Historical, Parametric, and Monte Carlo VaR services.

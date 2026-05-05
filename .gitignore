@@ -9,9 +9,11 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.ipynb_checkpoints/
 
 prices.csv
 returns.csv
 portfolio_returns.csv
+report.html
 
 .DS_Store

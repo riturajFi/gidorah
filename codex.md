@@ -8,11 +8,13 @@ Start here before reading implementation files.
 2. Identify target capability.
 3. Open target folder `instructions.md`.
 4. Open only referenced files in that folder.
-5. Use `main.py` only to understand orchestration.
+5. Use `portfolio_var_analysis.ipynb` for notebook workflow.
+6. Use `main.py` only as CLI mirror.
 
 ## Repo Map
 
-- `main.py`: top-level workflow. No business logic should live here.
+- `portfolio_var_analysis.ipynb`: primary notebook workflow with cell-by-cell exploration.
+- `main.py`: CLI mirror. No business logic should live here.
 - `README.md`: quick run and project overview for humans.
 - `services/data_fetch/`: market data fetch, validation, price CSV read/write.
 - `services/returns/`: daily stock returns and daily portfolio returns.
@@ -33,8 +35,9 @@ Start here before reading implementation files.
 - Keep services small and single-purpose.
 - Put each service in its own folder.
 - Export public classes from folder `__init__.py`.
-- Keep `main.py` outside service folders.
-- Let `main.py` coordinate services only.
+- Keep `main.py` and notebook outside service folders.
+- Let `main.py` and notebook coordinate services only.
+- Notebook code should call services in separate domain cells, not reimplement service logic inline.
 - Prefer explicit service class names: `PriceDataFetchService`, `ReturnCalculatorService`, `HistoricalVaRService`, `ParametricVaRService`, `MonteCarloVaRService`.
 - Prefer immutable dataclasses for request/result objects.
 - Keep formulas visible and close to domain names.
@@ -44,7 +47,7 @@ Start here before reading implementation files.
 
 ## Avoid
 
-- Do not put calculations directly in `main.py`.
+- Do not put calculations directly in `main.py` or notebook cells.
 - Do not mix fetch, return, and VaR logic in one file.
 - Do not add abstractions unless they remove real duplication or clarify a domain boundary.
 - Do not hide simple formulas behind many helper methods.
@@ -54,7 +57,7 @@ Start here before reading implementation files.
 
 ## Current Flow
 
-`main.py` runs this pipeline:
+Notebook and `main.py` run this same pipeline:
 
 1. `PriceDataFetchService.fetch_prices(...)`
 2. `PriceDataFetchService.save_prices(...)`
@@ -65,7 +68,8 @@ Start here before reading implementation files.
 7. `HistoricalVaRService.calculate_var(...)`
 8. `ParametricVaRService.calculate_var(...)`
 9. `MonteCarloVaRService.calculate_var(...)`
-10. `CorrelationSpikeScenarioService.run(...)`
+10. `Scenario.run(...)` for each stress scenario
+11. Notebook builds tables/charts from service outputs
 
 ## Data Contracts
 

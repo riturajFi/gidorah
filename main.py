@@ -84,72 +84,14 @@ def main():
     scenario_results = [scenario.run(scenario_input) for scenario in scenarios]
 
     print("Fetched price data successfully.")
-    print()
     print("Tickers:", list(request.tickers))
     print("Rows:", len(prices))
     print("Start date:", prices.index.min().date())
     print("End date:", prices.index.max().date())
-    print()
-    print("Latest prices:")
-    print(prices.tail())
-    print()
-    print("Daily returns:")
-    print(returns.head())
-    print(returns.tail())
-    print()
-    print("Portfolio daily returns:")
-    print(portfolio_returns.head())
-    print(portfolio_returns.tail())
-    print()
-    print("Historical VaR")
-    print(f"95% VaR return: {historical_var_95.var_return:.4%}")
-    print(f"95% VaR dollar: ${historical_var_95.var_dollar:,.2f}")
-    print(f"99% VaR return: {historical_var_99.var_return:.4%}")
-    print(f"99% VaR dollar: ${historical_var_99.var_dollar:,.2f}")
-    print()
-    print("Parametric VaR")
-    print(
-        "Portfolio daily volatility: "
-        f"{parametric_var_95.portfolio_volatility:.4%}"
-    )
-    print(f"95% VaR: ${parametric_var_95.var_dollar:,.2f}")
-    print(f"99% VaR: ${parametric_var_99.var_dollar:,.2f}")
-    print()
-    print("Monte Carlo VaR")
-    print(f"Simulations: {monte_carlo_var.num_simulations}")
-    print(f"Seed: {monte_carlo_var.seed}")
-    print(f"95% VaR return: {monte_carlo_var.var_95_return:.4%}")
-    print(f"95% VaR dollar: ${monte_carlo_var.var_95_dollar:,.2f}")
-    print(f"99% VaR return: {monte_carlo_var.var_99_return:.4%}")
-    print(f"99% VaR dollar: ${monte_carlo_var.var_99_dollar:,.2f}")
-    print_scenario_results(scenario_results)
-
-
-def print_scenario_results(scenario_results):
-    print()
-    print("Stress Scenarios")
-    for result in scenario_results:
-        print()
-        print(result.name)
-        for metric_name, metric_value in result.metrics.items():
-            print(
-                f"{format_metric_name(metric_name)}: "
-                f"{format_metric_value(metric_name, metric_value)}"
-            )
-
-
-def format_metric_name(metric_name: str) -> str:
-    return metric_name.replace("_", " ").title()
-
-
-def format_metric_value(metric_name: str, metric_value: float) -> str:
-    if metric_name.endswith("_dollar"):
-        return f"${metric_value:,.2f}"
-
-    if metric_name in {"portfolio_return", "portfolio_vol"}:
-        return f"{metric_value:.4%}"
-
-    return f"{metric_value:.2f}"
+    print(f"Historical 95% VaR: ${historical_var_95.var_dollar:,.2f}")
+    print(f"Parametric 95% VaR: ${parametric_var_95.var_dollar:,.2f}")
+    print(f"Monte Carlo 95% VaR: ${monte_carlo_var.var_95_dollar:,.2f}")
+    print(f"Stress scenarios: {len(scenario_results)}")
 
 
 if __name__ == "__main__":
