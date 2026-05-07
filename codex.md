@@ -20,6 +20,7 @@ Start here before reading implementation files.
 - `services/returns/`: daily stock returns and daily portfolio returns.
 - `services/var/`: Historical Simulation VaR, Parametric VaR, Monte Carlo VaR.
 - `services/scenarios/`: scenario interface and stress scenario implementations.
+- `services/backtesting/`: rolling VaR breach backtest.
 - `requirements.txt`: Python dependencies.
 - generated CSV files: `prices.csv`, `returns.csv`, `portfolio_returns.csv`.
 
@@ -29,6 +30,7 @@ Start here before reading implementation files.
 - For return calculation, read `services/returns/instructions.md`.
 - For VaR calculation, read `services/var/instructions.md`.
 - For stress scenarios, read `services/scenarios/instructions.md`.
+- For rolling VaR backtest, read `services/backtesting/instructions.md`.
 
 ## Design Style
 
@@ -69,7 +71,8 @@ Notebook and `main.py` run this same pipeline:
 8. `ParametricVaRService.calculate_var(...)`
 9. `MonteCarloVaRService.calculate_var(...)`
 10. `Scenario.run(...)` for each stress scenario
-11. Notebook builds tables/charts from service outputs
+11. `RollingVaRBreachBacktestService.run(...)`
+12. Notebook builds tables/charts from service outputs
 
 ## Data Contracts
 
@@ -82,3 +85,4 @@ Notebook and `main.py` run this same pipeline:
 - Scenario input: `ScenarioInput`, fields `returns`, `weights`, `portfolio_value`.
 - Scenario result: `ScenarioResult`, fields `name`, `metrics`.
 - Scenario contract: every scenario inherits `Scenario` and implements `run(scenario_input)`.
+- Rolling VaR backtest result: `RollingVaRBacktestResult`, fields `breach_count`, `breach_rate`, `expected_breach_rate`, `comment`, `backtest_data`.

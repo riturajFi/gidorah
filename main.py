@@ -1,5 +1,6 @@
 import numpy as np
 
+from services.backtesting import RollingVaRBreachBacktestService
 from services.data_fetch import PriceDataFetchService, PriceDataRequest
 from services.returns import ReturnCalculatorService
 from services.scenarios import (
@@ -29,6 +30,7 @@ def main():
     historical_var_service = HistoricalVaRService()
     parametric_var_service = ParametricVaRService()
     monte_carlo_var_service = MonteCarloVaRService()
+    backtest_service = RollingVaRBreachBacktestService()
     scenarios = [
         EquityShock2008Scenario(),
         TechDrawdownScenario(),
@@ -82,6 +84,11 @@ def main():
         portfolio_value=PORTFOLIO_VALUE,
     )
     scenario_results = [scenario.run(scenario_input) for scenario in scenarios]
+    backtest_result = backtest_service.run(
+        portfolio_returns,
+        confidence_level=0.95,
+        window=250,
+    )
 
     print("Fetched price data successfully.")
     print("Tickers:", list(request.tickers))
@@ -92,6 +99,12 @@ def main():
     print(f"Parametric 95% VaR: ${parametric_var_95.var_dollar:,.2f}")
     print(f"Monte Carlo 95% VaR: ${monte_carlo_var.var_95_dollar:,.2f}")
     print(f"Stress scenarios: {len(scenario_results)}")
+    print(
+        "Rolling VaR breaches: "
+        f"{backtest_result.breach_count}/{backtest_result.observations} "
+        f"({backtest_result.breach_rate:.2%}; expected "
+        f"{backtest_result.expected_breach_rate:.2%})"
+    )
 
 
 if __name__ == "__main__":
