@@ -100,10 +100,11 @@ def main():
     print(f"Monte Carlo 95% VaR: ${monte_carlo_var.var_95_dollar:,.2f}")
     print(f"Stress scenarios: {len(scenario_results)}")
     print(
-        "Rolling VaR breaches: "
-        f"{backtest_result.breach_count}/{backtest_result.observations} "
-        f"({backtest_result.breach_rate:.2%}; expected "
-        f"{backtest_result.expected_breach_rate:.2%})"
+        "Rolling VaR backtest: "
+        f"breaches={backtest_result.number_of_breaches}, "
+        f"observations={backtest_result.observations}, "
+        f"exceedance_rate={backtest_result.exceedance_rate:.2%}, "
+        f"expected_exceedance_rate={backtest_result.expected_breach_rate:.2%}"
     )
 
 

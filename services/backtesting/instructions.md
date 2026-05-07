@@ -18,8 +18,9 @@ Backtest VaR models against realized portfolio returns.
 
 - Use previous-window returns only: `portfolio_returns.shift(1).rolling(window).quantile(0.05)`.
 - For 95% VaR, expected breach rate is `5%`.
-- Breach means actual portfolio return is below rolling VaR cutoff.
-- Count breaches and compare breach rate to expected rate.
+- Breach / exceedance means actual portfolio return is below rolling VaR cutoff.
+- Show number of breaches and exceedance rate.
+- Compare exceedance rate to expected rate.
 
 ## Boundaries
 

@@ -15,6 +15,14 @@ class RollingVaRBacktestResult:
     comment: str
     backtest_data: pd.DataFrame
 
+    @property
+    def number_of_breaches(self) -> int:
+        return self.breach_count
+
+    @property
+    def exceedance_rate(self) -> float:
+        return self.breach_rate
+
 
 class RollingVaRBreachBacktestService:
     def run(
@@ -65,9 +73,9 @@ class RollingVaRBreachBacktestService:
         expected_breach_rate: float,
     ) -> str:
         if breach_rate > expected_breach_rate * 1.5:
-            return "Breach rate is above expected rate; VaR may underestimate tail risk."
+            return "Exceedance rate is above expected rate; VaR may underestimate tail risk."
 
         if breach_rate < expected_breach_rate * 0.5:
-            return "Breach rate is below expected rate; VaR may be conservative."
+            return "Exceedance rate is below expected rate; VaR may be conservative."
 
-        return "Breach rate is close to expected rate."
+        return "Exceedance rate is close to expected rate."

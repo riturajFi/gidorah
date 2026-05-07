@@ -85,4 +85,4 @@ Notebook and `main.py` run this same pipeline:
 - Scenario input: `ScenarioInput`, fields `returns`, `weights`, `portfolio_value`.
 - Scenario result: `ScenarioResult`, fields `name`, `metrics`.
 - Scenario contract: every scenario inherits `Scenario` and implements `run(scenario_input)`.
-- Rolling VaR backtest result: `RollingVaRBacktestResult`, fields `breach_count`, `breach_rate`, `expected_breach_rate`, `comment`, `backtest_data`.
+- Rolling VaR backtest result: `RollingVaRBacktestResult`, fields `number_of_breaches`, `exceedance_rate`, `expected_breach_rate`, `comment`, `backtest_data`.
