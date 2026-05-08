@@ -68,6 +68,66 @@ The notebook and CLI can create these local outputs:
 
 These files are ignored by git because they are generated from live market data.
 
+## Plots And Interpretation
+
+Add exported notebook screenshots under `docs/images/` and link them in this section. Suggested filenames are shown below.
+
+### Adjusted Close Prices
+
+![Adjusted close prices](docs/images/adjusted-close-prices.png)
+
+**What it shows:** adjusted close price history for AAPL, GOOGL, and MSFT.
+
+**How to interpret:** this plot gives context for the risk period. Large trend moves, drawdowns, and high-volatility periods explain why VaR estimates change. Price levels are not directly used for VaR after returns are calculated, but they help sanity-check the data.
+
+### Portfolio Daily Returns
+
+![Portfolio daily returns](docs/images/portfolio-daily-returns.png)
+
+**What it shows:** one time series of weighted daily portfolio returns.
+
+**How to interpret:** this is the main input to Historical VaR and rolling backtest. Sharp negative spikes are loss days. Dense noisy periods indicate higher realized volatility.
+
+### Portfolio Return Distribution
+
+![Portfolio return distribution](docs/images/portfolio-return-distribution.png)
+
+**What it shows:** histogram of portfolio daily returns.
+
+**How to interpret:** this shows how daily portfolio returns are distributed. A wider distribution means higher volatility. The left side is most important for risk because it represents loss days.
+
+### Historical VaR Cutoffs
+
+![Historical VaR cutoffs](docs/images/historical-var-cutoffs.png)
+
+**What it shows:** histogram of portfolio daily returns with 95% and 99% Historical VaR cutoff lines.
+
+**How to interpret:** VaR lives in the left tail. The 95% cutoff means about 5% of days were worse. The 99% cutoff is farther left because only about 1% of days were worse. If the left tail is fat, losses can be much worse than normal assumptions suggest.
+
+### VaR Method Comparison
+
+![VaR method comparison](docs/images/var-method-comparison.png)
+
+**What it shows:** dollar VaR from Historical, Parametric, and Monte Carlo methods at 95% and 99%.
+
+**How to interpret:** 99% VaR should be larger than 95% VaR. Differences across methods come from assumptions: Historical uses empirical returns, Parametric assumes normal returns, and Monte Carlo simulates returns from historical mean/covariance.
+
+### Stress Scenario Dollar Impact
+
+![Stress scenario dollar impact](docs/images/stress-scenario-dollar-impact.png)
+
+**What it shows:** dollar losses for direct shock scenarios and stressed VaR for the correlation spike scenario.
+
+**How to interpret:** direct shocks answer “what if this one-day market move happens?” Correlation spike answers “what if diversification weakens and stocks move together?” Larger bars mean larger portfolio risk under that scenario.
+
+### Rolling VaR Breach Backtest
+
+![Rolling VaR breach backtest](docs/images/rolling-var-breach-backtest.png)
+
+**What it shows:** realized portfolio returns, rolling 250-day Historical VaR(95), and breach/exceedance points.
+
+**How to interpret:** a breach happens when realized return falls below the rolling VaR cutoff. Expected exceedance rate for 95% VaR is about 5%. If realized exceedance rate is much higher than 5%, VaR may underestimate tail risk. If much lower, VaR may be conservative.
+
 ## Project Structure
 
 - `portfolio_var_analysis.ipynb`: primary notebook workflow with tables and charts.
