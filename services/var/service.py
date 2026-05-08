@@ -38,7 +38,7 @@ class HistoricalVaRService:
     ) -> HistoricalVaRResult:
         tail_probability = 1 - confidence_level
         var_return = portfolio_returns.quantile(tail_probability)
-        var_dollar = -var_return * portfolio_value
+        var_dollar = max(0.0, -var_return * portfolio_value)
 
         return HistoricalVaRResult(
             confidence_level=confidence_level,
@@ -106,8 +106,8 @@ class MonteCarloVaRService:
 
         var_95_return = np.quantile(simulated_portfolio_returns, 0.05)
         var_99_return = np.quantile(simulated_portfolio_returns, 0.01)
-        var_95_dollar = -var_95_return * portfolio_value
-        var_99_dollar = -var_99_return * portfolio_value
+        var_95_dollar = max(0, -var_95_return * portfolio_value)
+        var_99_dollar = max(0, -var_99_return * portfolio_value)    
 
         return MonteCarloVaRResult(
             var_95_return=var_95_return,

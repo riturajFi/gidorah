@@ -43,7 +43,7 @@ class WeightedShockScenario(Scenario):
         aligned_shocks = shocks.loc[scenario_input.returns.columns].to_numpy()
         portfolio_return = aligned_shocks @ scenario_input.weights
         portfolio_pnl = portfolio_return * scenario_input.portfolio_value
-        portfolio_loss = -portfolio_pnl
+        portfolio_loss = max(0.0, -portfolio_pnl)
 
         return ScenarioResult(
             name=self.name,
@@ -123,6 +123,9 @@ class CorrelationSpikeScenario(Scenario):
         returns: pd.DataFrame,
         correlation: float,
     ) -> pd.DataFrame:
+        if not -1 <= correlation <= 1:
+            raise ValueError("Correlation must be between -1 and 1.")
+
         volatilities = returns.std()
         correlation_matrix = np.full(
             (len(volatilities), len(volatilities)),
