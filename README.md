@@ -70,8 +70,6 @@ These files are ignored by git because they are generated from live market data.
 
 ## Plots And Interpretation
 
-Add exported notebook screenshots under `docs/images/` and link them in this section. Suggested filenames are shown below.
-
 ### Adjusted Close Prices
 
 ![Adjusted close prices](docs/images/adjusted-close-prices.png)
